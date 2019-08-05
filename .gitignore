@@ -1,3 +1,10 @@
 data/
 OK*
 .ipynb*
+
+.csv
+
+
+.DS_STORE
+
+
