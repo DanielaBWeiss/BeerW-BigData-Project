@@ -14,6 +14,7 @@ df = pd.read_csv("../data/original_data.csv")
 
 df.drop("country",axis=1,inplace=True) # only single country, no need
 df = df[df["bar_type"]!= "Night Club"] # only 83 rows from Night Club 
-df.drop(["data_availability_status_id","is_bulk","status","last_status","state","state_id","waiter_id","country_id"],axis=1,inplace=True) # only single country, no need
 df = df[df["city"] == "Toronto"] #choose only Toronto city
-df.to_csv("df_july.csv", index=False)
+df.drop(["data_availability_status_id","is_bulk","status","last_status","state","state_id","waiter_id","country_id", "city"],axis=1,inplace=True) # only single country, no need
+
+df.to_csv("../data/df_july.csv", index=False)
