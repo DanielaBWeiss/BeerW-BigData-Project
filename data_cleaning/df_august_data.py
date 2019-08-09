@@ -37,11 +37,12 @@ data["day_of_week"] = data.order_time.apply(lambda ticket: ticket.day_name())
 data["order_hour"] = data.order_time.apply(lambda ticket: ticket.hour)
 
 def period_of_day(hour):
-    if hour >= 6 and hour <= 11: return "breakfast"
-    elif hour >= 12 and hour <= 14: return "lunch"
-    elif hour >= 13 and hour <= 18: return "afternoon"
-    elif hour >= 19 and hour <= 22: return "dinner"
-    elif hour >= 23 or hour <= 5: return "night"
+    if hour >= 6 and hour < 11: return 'breakfast'
+    elif hour >= 11 and hour < 14: return 'lunch'
+    elif hour >= 14 and hour < 18: return 'afternoon'
+    elif hour >= 18 and hour < 21: return 'dinner'
+    elif hour >= 21 and hour < 23: return 'hang_out'
+    elif hour >= 23 or hour < 6: return 'night'
 
 data["period_of_day"] = data.apply(lambda order: period_of_day(int(order["order_hour"])), axis=1)
 data.drop("order_hour", axis=1, inplace=True)
