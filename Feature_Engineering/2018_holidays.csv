@@ -1,0 +1,21 @@
+,Date,Name,Year,Month,Day,Weekday,Types,IsObserved,Country,Locations,States
+0,2018-01-01,New Year's Day,2018,1,1,Mon,National holiday,,Canada,,
+1,2018-01-02,Day After New Year’s Day,2018,1,2,Tue,Local holiday,,Canada,QC,Quebec
+2,2018-02-14,Valentine's Day,2018,2,14,Wed,Observance,,Canada,,
+3,2018-03-01,St David's Day,2018,3,1,Thu,Observance,,Canada,,
+4,2018-03-17,St. Patrick's Day,2018,3,17,Sat,Observance,,Canada,,
+5,2018-03-30,Good Friday,2018,3,30,Fri,"National holiday,Christian",,Canada,,
+6,2018-04-02,Easter Monday,2018,4,2,Mon,National holiday,,Canada,"NB, NT, NU, QC","New Brunswick,Northwest Territories,Nunavut,Quebec"
+7,2018-05-21,Victoria Day,2018,5,21,Mon,National holiday,,Canada,"All except NS, PE, QC","Alberta,British Columbia,Manitoba,New Brunswick,Newfoundland and Labrador,Northwest Territories,Nunavut,Ontario,Saskatchewan,Yukon"
+8,2018-07-01,Canada Day,2018,7,1,Sun,National holiday,,Canada,"NS, NL","Nova Scotia,Newfoundland and Labrador"
+9,2018-07-02,Canada Day observed,2018,7,2,Mon,National holiday,1.0,Canada,,
+10,2018-08-06,Civic/Provincial Day,2018,8,6,Mon,National holiday,,Canada,"NT, NU","Northwest Territories,Nunavut"
+11,2018-09-03,Labour Day,2018,9,3,Mon,National holiday,,Canada,,
+12,2018-10-08,Thanksgiving Day,2018,10,8,Mon,National holiday,,Canada,"All except NB, NS, PE","Alberta,British Columbia,Manitoba,Newfoundland and Labrador,Northwest Territories,Nunavut,Ontario,Quebec,Saskatchewan,Yukon"
+13,2018-10-31,Halloween,2018,10,31,Wed,Observance,,Canada,,
+14,2018-11-01,All Saints' Day,2018,11,1,Thu,"Observance,Christian",,Canada,,
+15,2018-11-11,Remembrance Day,2018,11,11,Sun,National holiday,,Canada,"All except MB, NS, ON, QC","Alberta,British Columbia,New Brunswick,Newfoundland and Labrador,Northwest Territories,Nunavut,Prince Edward Island,Saskatchewan,Yukon"
+16,2018-11-12,Remembrance Day observed,2018,11,12,Mon,National holiday,1.0,Canada,"All except MB, NS, ON, QC","Alberta,British Columbia,New Brunswick,Newfoundland and Labrador,Northwest Territories,Nunavut,Prince Edward Island,Saskatchewan,Yukon"
+17,2018-12-25,Christmas,2018,12,25,Tue,"National holiday,Christian",,Canada,,
+18,2018-12-26,Boxing Day,2018,12,26,Wed,National holiday,,Canada,"NB, NL, NT, NU, ON","New Brunswick,Newfoundland and Labrador,Northwest Territories,Nunavut,Ontario"
+19,2018-12-31,New Year's Eve,2018,12,31,Mon,Observance,,Canada,,
