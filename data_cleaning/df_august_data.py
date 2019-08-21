@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-table_path = "../data/df_july.csv"
+table_path = "../data/df_july_all_cities.csv"
 
 df = pd.read_csv(table_path)
 data = df.copy()
