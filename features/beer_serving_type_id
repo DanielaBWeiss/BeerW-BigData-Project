@@ -1,0 +1,8 @@
+insights: 
+mapping from beer serving type ids to items:
+0. UNK
+1. bottle
+2. glass
+3. can
+4. ?
+5. keg
