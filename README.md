@@ -18,7 +18,7 @@ The data needs to go through multiple steps in order to clean it, filter it for 
 In the preprocess folder there exist multiple scripts for you to run.
 
 **1. Textual Cleaning** <br />
-Run `python textual_cleaning.py` and make sure to change the name of the csv file to the one you have in the data folder.
+Run `python textual_cleaning.py` and make sure to change the name of the csv file to the one you have in the data folder. <br />
 This script saces the file: `df_1_text_processed.csv` under the `data` folder.
 
 &nbsp;&nbsp;**TODO** - add argument handling in the script so we can pass in terminal <br />
@@ -28,7 +28,7 @@ This script saces the file: `df_1_text_processed.csv` under the `data` folder.
 &nbsp;&nbsp;A few dictionary are also used in order to keep certain meals that *do* contain the above mentioned words in the title   names.
 
 **2. Adding Features** <br />
-Run `python adding_features.py` - saves `df_2_text_processed.csv` under the `data` folder.
+Run `python adding_features.py` - saves `df_2_text_processed.csv` under the `data` folder. <br />
 This script reads the previously cleaned data, and adds multiple features using dictionaries and rules.
 
 &nbsp;**What features are we adding?** <br />
@@ -49,9 +49,9 @@ This script reads the previously cleaned data, and adds multiple features using 
   - `meal_flow_last_to_close` - the number of flow steps occurred, between the last item ordered, and till the table order was closed.
 <br />
 
-**3.Quality Filtering** <br />
-&nbsp;&nbsp;Run `python quality_filtering` - saves `df_3_text_processed.csv` under the `data` folder.
-&nbsp;&nbsp;This script reads the previous data, and removes bars that are "untrustworthy", meaning they have data statistics that don't  make sense.
-&nbsp;&nbsp;Currently, we are only removing specific bars where their maximum guest counts only reach 0 or 1.
+**3. Quality Filtering** <br />
+Run `python quality_filtering` - saves `df_3_text_processed.csv` under the `data` folder. <br />
+This script reads the previous data, and removes bars that are "untrustworthy", meaning they have data statistics that don't  make sense.
+Currently, we are only removing specific bars where their maximum guest counts only reach 0 or 1.
 
 
