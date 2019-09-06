@@ -31,22 +31,22 @@ A few dictionary are also used in order to keep certain meals that *do* contain 
 Run `python adding_features.py` - saves `df_2_text_processed.csv` under the `data` folder.
 This script reads the previously cleaned data, and adds multiple features using dictionaries and rules.
 
-**What features are we adding?**
-1. `category_id` - We sum all the category ids in each item of the total order, and add 6 separate columns for each one.
-2. `total_order` - summing all items in an order
-3. `order_day_of_week` - "Friday", "Monday", etc
-4. `is_weekend` - is the order day landed on a weekend (friday - sunday)
-5. `sharable` - is the item "title" a food that is a typical "sharing" food? (pizza, fries, wings, etc)
-6. `kids_meal` - is the item a "kid" item
-7. `birthday` - is there a comment in the order about a "birthday"
-8. `order_hour` - the order_time hour
-9. `period_of_day` - what part of the day did the order occur in (breakfast, lunch, etc)
-10. `minute & hour time` - minute and hour of the order for - order_item_time and order_time_closed
-11. `dwell_time` - the total time (in hours) the table order was open for
-12. `meal_step` - the step in which the current item was ordered in. If the item was ordered after more than 4 minutes than the previous item, then the item is considered to be in the next numeric step. (1 - n steps, in increments of 1)
-13. `meal_flow_step` - the "flow" step in which the current item was ordered in. The same as `meal_step`, except the increments are (time between the previous order / 4 minutes) - this means we consider "flow_steps" to be four minutes long. Each flow step is added the total flow steps up to that point.
-14. `total_flow_steps` - the total flow steps in that order
-15. `meal_flow_last_to_close` - the number of flow steps occurred, between the last item ordered, and till the table order was closed.
+  **What features are we adding?**
+  -  `category_id` - We sum all the category ids in each item of the total order, and add 6 separate columns for each one.
+  - `total_order` - summing all items in an order
+  - `order_day_of_week` - "Friday", "Monday", etc
+  - `is_weekend` - is the order day landed on a weekend (friday - sunday)
+  - `sharable` - is the item "title" a food that is a typical "sharing" food? (pizza, fries, wings, etc)
+  - `kids_meal` - is the item a "kid" item
+  - `birthday` - is there a comment in the order about a "birthday"
+  - `order_hour` - the order_time hour
+  - `period_of_day` - what part of the day did the order occur in (breakfast, lunch, etc)
+  - `minute & hour time` - minute and hour of the order for - order_item_time and order_time_closed
+  - `dwell_time` - the total time (in hours) the table order was open for
+  - `meal_step` - the step in which the current item was ordered in. If the item was ordered after more than 4 minutes than the previous item, then the item is considered to be in the next numeric step. (1 - n steps, in increments of 1)
+  - `meal_flow_step` - the "flow" step in which the current item was ordered in. The same as `meal_step`, except the increments are (time between the previous order / 4 minutes) - this means we consider "flow_steps" to be four minutes long. Each flow step is added the total flow steps up to that point.
+  - `total_flow_steps` - the total flow steps in that order
+  - `meal_flow_last_to_close` - the number of flow steps occurred, between the last item ordered, and till the table order was closed.
 
 
 3. **Quality Filtering**
