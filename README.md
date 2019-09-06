@@ -47,7 +47,7 @@ This script reads the previously cleaned data, and adds multiple features using 
 13. `meal_flow_step` - the "flow" step in which the current item was ordered in. The same as `meal_step`, except the increments are (time between the previous order / 4 minutes) - this means we consider "flow_steps" to be four minutes long. Each flow step is added the total flow steps up to that point.
 14. `total_flow_steps` - the total flow steps in that order
 15. `meal_flow_last_to_close` - the number of flow steps occurred, between the last item ordered, and till the table order was closed.
-
+--
 
 3. **Quality Filtering**
 Run `python quality_filtering` - saves `df_3_text_processed.csv` under the `data` folder.
