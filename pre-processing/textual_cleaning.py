@@ -1,95 +1,62 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": 3,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "import pandas as pd\n",
-    "\n",
-    "#Change the data file here\n",
-    "data = pd.read_csv(\"../data/korea_toronto_hocky_20190410_20190424.csv\")\n",
-    "\n",
-    "\n",
-    "# Dropping Unrelevant Titles, except those appearing in dictionaries\n",
-    "sauces = set()\n",
-    "sub = set()\n",
-    "\n",
-    "def filter_titles(row):\n",
-    "    title = row[\"title\"].lower()\n",
-    "    price = row[\"sales_before_tax\"]\n",
-    "\n",
-    "    if \"xtra\" in title:\n",
-    "        return False\n",
-    "    if \"sub\" in title and price == 0:\n",
-    "        sub.add(title)\n",
-    "        return False\n",
-    "    elif \"add\" in title:\n",
-    "        return False\n",
-    "    elif \"sauce\" in title:\n",
-    "        for t in foods_w_sauce: \n",
-    "            if t in title: return True\n",
-    "        for t in remove_w_sauce:\n",
-    "            if t in title: return False\n",
-    "        sauces.add(title)\n",
-    "        return False\n",
-    "    elif \"no \" in title:\n",
-    "        return False\n",
-    "    elif \"no.\" in title:\n",
-    "        return False\n",
-    "    elif \"-no \" in title:\n",
-    "        return False\n",
-    "    elif \"side \" in title:\n",
-    "        return False\n",
-    "    elif \"+\" in title:\n",
-    "        return False\n",
-    "    elif \"dip\" in title:\n",
-    "        return False\n",
-    "    elif \"blue cheese\" in title:\n",
-    "        return False\n",
-    "    elif \"bbq\" in title:\n",
-    "        return False\n",
-    "    elif \"n/c\" in title:\n",
-    "        return False\n",
-    "    elif \"s/o\" in title:\n",
-    "        return False\n",
-    "    elif title == '' or title == 'garlic.aioli' or title == 'gluten' or title == 'hot n honey' or title == 'honey garlic' or title == 'kids.' or title == 'to go':\n",
-    "        return False\n",
-    "    else:\n",
-    "        return True\n",
-    "\n",
-    "foods_w_sauce = [\"fingers\", \"spaghetti\", \"poutine\", \"wings\", \"pate\", \"bowl\", \"fries\", \"rigatoni\", \"pasta\",\n",
-    "                \"linguini\", \"frite\"]\n",
-    "remove_w_sauce = [\"no wing\", \"for wing\", \"on\", \"side\"]\n",
-    "whitelist = set('.abcdefghijklmnopqrstuvwxyz \\\\//')\n",
-    "    \n",
-    "data.title = data.title.apply(lambda x: str(x))\n",
-    "data = data[data.apply(lambda x: filter_titles(x), axis=1)]\n",
-    "\n",
-    "data.to_csv(\"../data/df_1_text_processed.csv\", index=False)"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.6.8"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 2
-}
+import pandas as pd
+
+
+data = pd.read_csv("../data/original_data.csv")
+
+
+# Dropping Unrelevant Titles, except those appearing in dictionaries
+sauces = set()
+sub = set()
+
+def filter_titles(row):
+    title = row["title"].lower()
+    price = row["sales_before_tax"]
+
+    if "xtra" in title:
+        return False
+    if "sub" in title and price == 0:
+        sub.add(title)
+        return False
+    elif "add" in title:
+        return False
+    elif "sauce" in title:
+        for t in foods_w_sauce: 
+            if t in title: return True
+        for t in remove_w_sauce:
+            if t in title: return False
+        sauces.add(title)
+        return False
+    elif "no " in title:
+        return False
+    elif "no." in title:
+        return False
+    elif "-no " in title:
+        return False
+    elif "side " in title:
+        return False
+    elif "+" in title:
+        return False
+    elif "dip" in title:
+        return False
+    elif "blue cheese" in title:
+        return False
+    elif "bbq" in title:
+        return False
+    elif "n/c" in title:
+        return False
+    elif "s/o" in title:
+        return False
+    elif title == '' or title == 'garlic.aioli' or title == 'gluten' or title == 'hot n honey' or title == 'honey garlic' or title == 'kids.' or title == 'to go':
+        return False
+    else:
+        return True
+
+foods_w_sauce = ["fingers", "spaghetti", "poutine", "wings", "pate", "bowl", "fries", "rigatoni", "pasta",
+                "linguini", "frite"]
+remove_w_sauce = ["no wing", "for wing", "on", "side"]
+whitelist = set('.abcdefghijklmnopqrstuvwxyz \\//')
+    
+data.title = data.title.apply(lambda x: str(x))
+data = data[data.apply(lambda x: filter_titles(x), axis=1)]
+
+data.to_csv("../data/df_1_text_processed.csv", index=False)
