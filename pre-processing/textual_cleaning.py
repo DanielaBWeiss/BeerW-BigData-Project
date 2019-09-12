@@ -1,9 +1,10 @@
 import pandas as pd
 
+#Change name here to add to saved csv file
+name="valentine"
+data = pd.read_csv("../data/toronto_valentine_20190210_20190216.csv")
 
-data = pd.read_csv("../data/original_data.csv")
-
-
+data = data.dropna()
 # Dropping Unrelevant Titles, except those appearing in dictionaries
 sauces = set()
 sub = set()
@@ -59,4 +60,4 @@ whitelist = set('.abcdefghijklmnopqrstuvwxyz \\//')
 data.title = data.title.apply(lambda x: str(x))
 data = data[data.apply(lambda x: filter_titles(x), axis=1)]
 
-data.to_csv("../data/df_1_text_processed.csv", index=False)
+data.to_csv("../data/"+name+"_1_text_processed.csv", index=False)

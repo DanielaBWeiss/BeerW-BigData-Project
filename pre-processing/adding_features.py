@@ -1,9 +1,11 @@
 import pandas as pd
 
+name = "hockey"
 # 1. Add `total_orders_category_id_X` feature (X = 1.0 ... 6.0)
-data = pd.read_csv("../data/df_1_text_processed.csv")
+data = pd.read_csv("../data/hockey_1_text_processed.csv")
 
 # add one-hot-encoding for category ids
+data.title = data.title.apply(lambda x: str(x))
 data = pd.concat([data, pd.get_dummies(data["category_id"], prefix="category_id")], axis=1)
 # count total of orders per category id
 category_ids = [float(i) for i in range(1, 7)]
@@ -164,4 +166,4 @@ data["total_flow_steps"] = data.order_id.apply(lambda x: total_dict[x]["total_me
 data["meal_flow_step"] = data.apply(lambda x: total_dict[x.order_id]["meal_flow"][x.order_item_time], axis=1)
 
 
-data.to_csv("../data/df_2_text_processed.csv", index=False)
+data.to_csv("../data/"+name+"_2_text_processed.csv", index=False)
