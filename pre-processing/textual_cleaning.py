@@ -1,8 +1,8 @@
 import pandas as pd
 
 #Change name here to add to saved csv file
-name="valentine"
-data = pd.read_csv("../data/toronto_valentine_20190210_20190216.csv")
+name="hockey"
+data = pd.read_csv("../data/korea_toronto_hocky_20190410_20190424.csv")
 
 data = data.dropna()
 # Dropping Unrelevant Titles, except those appearing in dictionaries

@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
 
-#change name of file
-name = "silvester"
-data = pd.read_csv("../data/silvester_2_text_processed.csv")
+
+name = "hockey"
+data = pd.read_csv("../data/hockey_2_text_processed.csv")
 
 data[~(data.guest_count == 0)]
 
@@ -12,9 +12,9 @@ data['total_sales_before_tax'] = data.groupby('order_id')['sales_before_tax'].tr
 data['total_sales_inc_tax'] = data.groupby('order_id')['sales_inc_tax'].transform('sum')
 data['total_orders'] = data.groupby('order_id')['order_id'].transform('size')
 
-columns = ['bar_id', 'order_id', 'order_time', 'order_item_id', 'title', 'category_id',
-           'beer_volume', 'item_qty', 'guest_count', 'sales_before_tax', 'total_sales_before_tax', 'total_orders']
-data = data[columns]
+#columns = ['bar_id', 'order_id', 'order_time', 'order_item_id', 'title', 'category_id',
+ #          'beer_volume', 'item_qty', 'guest_count', 'sales_before_tax', 'total_sales_before_tax', 'total_orders']
+#data = data[columns]
 
 bars = data.bar_id.unique()
 
@@ -58,6 +58,8 @@ last_bars.to_csv("../data/df_3_text_processed.csv", index=False)
 '''
 last_bars = bars_data[bars_data["guest_count_min"] != 0]
 if len(last_bars) < 25:
-    bars_data.to_csv("../data/"+name+"_3_text_processed.csv", index=False)
+    data = data[data.bar_id.isin(bars_data.index)]
+    data.to_csv("../data/"+name+"_3_text_processed.csv", index=False)
 else:
-    last_bars.to_csv("../data/"+name+"_3_text_processed.csv", index=False)
+    data = data[data.bar_id.isin(last_bars.index)]
+    data.to_csv("../data/"+name+"_3_text_processed.csv", index=False)
