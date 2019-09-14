@@ -138,6 +138,7 @@ def find_total_time(data):
             diff = item - prev
             if ((diff.components.hours*60) + diff.components.minutes) >= 4:
                 total_dict[order]["meal_step"][item] = prev_step + 1
+                prev_step = prev_step + 1
             else:
                 total_dict[order]["meal_step"][item] = prev_step
             
