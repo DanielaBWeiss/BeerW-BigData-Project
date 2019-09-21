@@ -1,8 +1,8 @@
 import pandas as pd
 
 #Change name here to add to saved csv file
-name="hockey"
-data = pd.read_csv("../data/korea_toronto_hocky_20190410_20190424.csv")
+name="valentine"
+data = pd.read_csv("../data/toronto_valentine_20190210_20190216.csv")
 
 data = data.dropna()
 # Dropping Unrelevant Titles, except those appearing in dictionaries
@@ -56,7 +56,8 @@ foods_w_sauce = ["fingers", "spaghetti", "poutine", "wings", "pate", "bowl", "fr
                 "linguini", "frite"]
 remove_w_sauce = ["no wing", "for wing", "on", "side"]
 whitelist = set('.abcdefghijklmnopqrstuvwxyz \\//')
-    
+data["title"] = data["title"].apply(lambda x: ''.join(filter(whitelist.__contains__ ,x.lower())))
+
 data.title = data.title.apply(lambda x: str(x))
 data = data[data.apply(lambda x: filter_titles(x), axis=1)]
 
