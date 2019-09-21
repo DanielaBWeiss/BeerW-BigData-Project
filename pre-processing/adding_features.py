@@ -1,8 +1,14 @@
 import pandas as pd
 
+data_map = {
+    "hockey": "../data/hockey_1_text_processed.csv",
+    "valentine": "../data/valentine_1_text_processed.csv",
+    "silvester": "../data/silvester_1_text_processed.csv"
+}
+
 name = "hockey"
 # 1. Add `total_orders_category_id_X` feature (X = 1.0 ... 6.0)
-data = pd.read_csv("../data/hockey_1_text_processed.csv")
+data = pd.read_csv(data_map[name])
 
 # add one-hot-encoding for category ids
 data.title = data.title.apply(lambda x: str(x))

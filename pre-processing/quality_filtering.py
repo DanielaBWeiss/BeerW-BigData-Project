@@ -1,9 +1,14 @@
 import numpy as np
 import pandas as pd
 
+data_map = {
+    "hockey": "../data/hockey_2_text_processed.csv",
+    "valentine": "../data/valentine_2_text_processed.csv",
+    "silvester": "../data/silvester_2_text_processed.csv"
+}
 
 name = "hockey"
-data = pd.read_csv("../data/hockey_2_text_processed.csv")
+data = pd.read_csv(data_map[name])
 
 data[~(data.guest_count == 0)]
 
