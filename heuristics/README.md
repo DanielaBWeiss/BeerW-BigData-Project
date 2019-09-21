@@ -18,7 +18,16 @@ Then, a main script (called `main.py`) will take care of applying the relevant h
 
 
 ### 2 guests tables
+1. `Lunch`
+2. `Dinner`
+3. `Casual Drink and Meal`
+4. `Drinking`
 
+Each occasion may also have a time sub-label one or more of the following:
+- `lunch`
+- `afternoon`
+- `dinner`
+- `late night`
 
 ### 3-5 guests tables
 1. `Family Event`
