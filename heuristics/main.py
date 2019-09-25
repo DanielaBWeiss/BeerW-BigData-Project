@@ -19,7 +19,7 @@ def add_features(data):
 def drop_features(data):
     columns = ["bar_id", "order_item_id", "sales_before_tax", "sales_inc_tax", "title",
                "category_id", "beer_brand_id", "beer_serving_type_id",
-               "order_item_hour", "order_item_minute", "meal_step", , "meal_flow_step"]
+               "order_item_hour", "order_item_minute", "meal_step", "meal_flow_step"]
     
     data.drop(columns=columns, inplace=True)
     return data
@@ -112,6 +112,6 @@ def main():
     print("Labeling is complete")
     
 
-if __name__ == '__main__:
+if __name__ == '__main__':
     main()
     
