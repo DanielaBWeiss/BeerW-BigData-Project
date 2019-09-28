@@ -10,7 +10,7 @@ There will be 4 different heuristics, one for each bin:
 - 3-5 guests tables
 - 6+ guests tables
 
-Then, a main script (called `main.py`) will take care of applying the relevant heuristic based on the *guest_count* for each table.
+Then, a main script (called `occasion_classifier.py`) will take care of applying the relevant heuristic based on the *guest_count* for each table.
 * Make sure to use **all** of the *pre-processing* scripts prior to executing this script.
 
 ## Occasions

@@ -2,12 +2,12 @@ import re
 import pandas as pd
 
 data_map = {
-    "hockey": "../data/hockey_1_text_processed.csv",
-    "valentine": "../data/valentine_1_text_processed.csv",
-    "silvester": "../data/silvester_1_text_processed.csv"
+    "hockey"    : "../data/hockey_1_text_processed.csv",
+    "valentine" : "../data/valentine_1_text_processed.csv",
+    "silvester" : "../data/silvester_1_text_processed.csv"
 }
 
-name = "hockey"
+name = "silvester"
 # 1. Add `total_orders_category_id_X` feature (X = 1.0 ... 6.0)
 data = pd.read_csv(data_map[name])
 
@@ -164,16 +164,80 @@ def find_total_time(data):
 
      
     return total_dict
-  
-total_dict = find_total_time(data)
 
+
+def total_meal_steps(df):
+    order_ids = list(data.order_id.value_counts().keys())
+    total_dict = {}
+    for order in order_ids:
+        total_dict[order] = {}
+        df_order = data[data.order_id == order]
+        
+        df_order = df_order.sort_values(by="order_item_time")
+        last_meal_step = list(df_order.meal_step.sort_values())[-1]
+        total_dict[order]['total_meal_steps'] = last_meal_step
+
+        # from sit down to first order
+        meal_flows = [(i * 4 + 1) for i in list(df_order.meal_flow_step)]
+        
+        max_items_per_step = 0
+        for i in range(1,last_meal_step + 1):
+            step = df_order[df_order.meal_step == i]
+            if len(step) > max_items_per_step:
+                max_items_per_step = len(step)
+                
+        total_dict[order]['max_items_per_step'] = max_items_per_step
+
+        total_dict[order]['sit_to_order'] = meal_flows[0]
+        total_dict[order]['first_to_second_order'] = 0
+        if len(meal_flows) > 1:
+            total_dict[order]['first_to_second_order'] = meal_flows[1] - meal_flows[0]
+
+        total_diff_flows = []
+        prev_flow = 0
+        for flow in meal_flows:
+            if flow == prev_flow:
+                continue
+            total_diff_flows.append(flow - prev_flow)
+            prev_flow = flow
+
+        # avg time between orders
+        avg_steps = sum(total_diff_flows)/len(total_diff_flows)
+        total_dict[order]['avg_time_between_steps'] = avg_steps
+        
+        large_meals = 0
+        small_meals = 0
+        df_meals = df_order[df_order.category_id == 2]
+        for meal_price in df_meals.sales_before_tax:
+            if meal_price >= 6: large_meals += 1
+            else: small_meals += 1
+        total_dict[order]["total_large_meals"] = large_meals
+        total_dict[order]["total_small_meals"] = small_meals
+
+    return total_dict
+
+ 
 
 # 8. Adding the Meal flow steps
-data["dwell_time"]              = data.order_id.apply(lambda x: total_dict[x]["total_time"])
-data["meal_step"]               = data.apply(lambda x: total_dict[x.order_id]["meal_step"][x.order_item_time], axis=1)
+total_dict = find_total_time(data)
+data["dwell_time"] = data.order_id.apply(lambda x: total_dict[x]["total_time"])
+data["meal_step"] = data.apply(lambda x: total_dict[x.order_id]["meal_step"][x.order_item_time], axis=1)
 data["meal_flow_last_to_close"] = data.apply(lambda x: total_dict[x.order_id]["meal_flow_last_to_close"], axis=1)
 data["total_flow_steps"]        = data.order_id.apply(lambda x: total_dict[x]["total_meal_flow_steps"])
 data["meal_flow_step"]          = data.apply(lambda x: total_dict[x.order_id]["meal_flow"][x.order_item_time], axis=1)
+
+#Calculating the total, avg time between meals, time from sit down to ordering, and max items per single step
+avg_meal_step_dict = total_meal_steps(data)
+data['total_meal_steps'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_meal_steps'])
+data['first_to_second_order'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['first_to_second_order'])
+data['avg_time_between_steps'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['avg_time_between_steps'])
+data['sit_to_order'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['sit_to_order'])
+data['max_items_per_step'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['max_items_per_step'])
+
+#How many small and large meals per table
+data['total_large_meals'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_large_meals'])
+data['total_small_meals'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_small_meals'])
+
 
 
 data.to_csv("../data/{}_2_text_processed.csv".format(name), index=False)

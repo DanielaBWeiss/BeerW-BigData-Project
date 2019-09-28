@@ -10,5 +10,5 @@ The goal of this project is to understand how to work with **Big Data**, do **da
 
 1. Acquire the necessary data
 2. Place them in the *data/* folder
-3. Run the *pre-processing/* scripts by order
-4. Run the *heuristics/main.py* script
+3. Run the *pre-processing/* scripts one by one in order
+4. Run the *heuristics/occasion_classifier.py* script
