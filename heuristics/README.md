@@ -16,19 +16,20 @@ Then, a main script (called `main.py`) will take care of applying the relevant h
 ## Occasions
 
 ### 1 guest tables
-
-
-### 2 guests tables
 1. `Lunch`
 2. `Dinner`
 3. `Casual Drink and Meal`
 4. `Drinking`
+5. `Not Category 1`
 
 Each occasion may also have a time sub-label one or more of the following:
 - `lunch`
 - `afternoon`
 - `dinner`
 - `late night`
+
+### 2 guests tables
+
 
 ### 3-5 guests tables
 1. `Family Event`
