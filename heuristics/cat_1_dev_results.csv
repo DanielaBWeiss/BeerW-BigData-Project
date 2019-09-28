@@ -1,2 +1,6 @@
 order_id,True_label,Predicted occasion,time sub-label
-525538989,Casual Drink and Meal,"['Dinner', 'Casual Drink and Meal']",{'afternoon'}
+434780854,Drinking,Drinking,{'lunch'}
+434753224,Dinner,Dinner,{'dinner'}
+447023765,Lunch,Lunch,{'lunch'}
+434766693,Casual Drink and Meal,Casual Drink and Meal,{'late_night'}
+446799837,Dinner,Dinner,{'dinner'}

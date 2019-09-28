@@ -1,4 +1,6 @@
 import pandas as pd
+#import occasion_classifier as oc
+
 pd.options.mode.chained_assignment = None  # default='warn'
 
 LUNCH = "Lunch"
@@ -8,11 +10,20 @@ CASUAL_DRINK_MEAL = "Casual Drink and Meal"
 NOT_1 = "Not Category 1"
 UNK = "Unknown"
 
-class Bin1Classifier():
 
-    def __init__(self):
-        self.occasion_labels = []
-        self.time_labels = []
+'''
+TODO 
+- maybe add a category for a late munch/ light meal late at night
+- Casual drink and meal could also just be casual drink, therefore either should change the name to casual, or add
+  casual drink
+- IMPORTANT
+    - create an ordering for the labels, maybe doesn't make sense to do multi-label.
+
+
+
+'''
+
+class Bin1Classifier():
 
     def classify(self, df):
         '''
@@ -20,12 +31,11 @@ class Bin1Classifier():
         :param data: Data is a pandas Dataframe that contains an order_id and a list of ordered items
         :return: The Occasion label, or unknown.
         '''
+        self._process_table(df)
+        feats = self._get_features(df)
 
-        self.process_table(df)
-        feats = self.get_features(df)
-
-        if not self.filter(df):  # Filter out tables that should not have been labeled with guest count == 1
-            self.occasion_labels.append(NOT_1)
+        if not self._filter(df):  # Filter out tables that should not have been labeled with guest count == 1
+            return NOT_1, []
 
 
         # ----HEURISTICS FOR CLASSIFYING OCCASIONS------
@@ -34,51 +44,56 @@ class Bin1Classifier():
         # TODO: meal step time
 
         # if lunch is one of the time labels, then we can exclude "dinner" occasion, but there could also be "afternoon" time.
-
-        self.time_labels = df["period_of_day"].iloc[0]
+        time_labels = df["period_of_day"].iloc[0]
 
         # handling case where only "lunch" time exists
-        if self.is_lunch(df, feats): self.occasion_labels.append(LUNCH)
-        if self.is_dinner(df, feats): self.occasion_labels.append(DINNER)
-        if self.is_drinking(df, feats): self.occasion_labels.append(DRINKING)
-        if self.is_casual(df, feats): self.occasion_labels.append(CASUAL_DRINK_MEAL)
-        if not self.occasion_labels: self.occasion_labels["occasion"].append(UNK)
+        if self._is_lunch(df, feats): return LUNCH, time_labels
+        if self._is_dinner(df, feats): return DINNER, time_labels
+        if self._is_casual(df, feats): return CASUAL_DRINK_MEAL, time_labels
+        if self._is_drinking(df, feats): return DRINKING, time_labels
+        return UNK, []
 
-    def is_lunch(self, df, feats):
+    def _is_lunch(self, df, feats):
         if "lunch" not in df.period_of_day.iloc[0]:
             return False
 
         if feats["total_foods"] == 0:
             return False
 
-        if feats["total_large_meals"] == 0: #at least one large meal must exist for lunch
+        if df["total_large_meals"].iloc[0] == 0: #at least one large meal must exist for lunch
             return False
 
-        if feats["dwell_time"] > 2: #if meal lasts longer than 2 hours, we do not call it lunch
-            return False
+        #if feats["dwell_time"] > 2: #if meal lasts longer than 2 hours, we do not call it lunch
+        #    return False
 
-        if feats['total_drinks'] <= 1: #at this point we have at least one large meal, and at most one drink
-            return True
-
-        return False
-
-    def is_dinner(self, df, feats):
-        if "lunch" in list(df.period_of_day)[0]:
-            return False
-
-        if feats["total_large_meals"] == 0 or feats["total_large_meals"] >= 3: #at least one large meal must exist for lunch
-            return False
-
-        if df["total_meal_steps"].iloc[0] > 3: #if meal lasts longer than 2 hours, we do not call it lunch
+        if feats['total_drinks'] > 1: #at this point we have at least one large meal, and at most one drink
             return False
 
         return True
 
-    def is_drinking(self, df, feats):
+    def _is_dinner(self, df, feats):
+        if "dinner" not in df.period_of_day.iloc[0] and "late_night" not in df.period_of_day.iloc[0]:
+            return False
+
+        if df["total_large_meals"].iloc[0] == 0: #at least one large meal must exist for lunch
+            return False
+
+        if df["total_meal_steps"].iloc[0] > 3: #if meal takes more than three meal steps
+            return False
+
+        if feats["total_drinks"] > 2:
+            return False
+
+        if feats["total_liquers"] == 2:
+            return False
+
+        return True
+
+    def _is_drinking(self, df, feats):
         if feats["total_drinks"] <= 1:
             return False
 
-        if feats['total_drinks'] == 2: #at this point we have at least one large meal, and at most one drink
+        if feats['total_drinks'] == 2:
             if feats['total_foods'] == 0 and feats["total_beers"] == 0:
                 return True
             return False
@@ -92,63 +107,78 @@ class Bin1Classifier():
                 return True
 
             # if beers are drank in less than avg 20 minutes between each beer
-            if df["avg_time_between_steps"] < 20 and feats["total_foods"] <= 1:
+            if df["avg_time_between_steps"].iloc[0] < 20:
                 return True
 
         #Occasion drinking must have at least a ratio of 3:1 for drinks:meals
         if feats['total_foods'] != 0:
             if feats["total_drinks"]/feats['total_foods'] > 1.5:
                 return True
-        else: return True
+            else: return False
+        else:
+            return True
 
         return False
 
-    def is_casual(self, df, feats):
+    def _is_casual(self, df, feats):
         if feats["total_drinks"] == 0:
             return False
 
-        if feats['total_drinks'] == 2: #at this point we have at least one large meal, and at most one drink
+        if feats["total_drinks"] == 1:
+            return True
+
+        if feats['total_drinks'] == 2: #at this point we have at least one large meal, and at most two drink
             if feats["total_beers"] >= 1:
                 return True
-            elif feats["total_foods"] >= 1: #if theres only liquer, at least one meal must exist
+            elif feats["total_foods"] >= 1: #if theres two liquer, at least one meal must exist
                 return True
             return False
 
         if feats["total_drinks"] == 3:
-            if feats["total_liquers"] <= 1:
+            if feats["total_liquers"] <= 1 and feats["total_foods"] >= 1:
                 return True
 
+            if feats["total_liquers"] >= 2:
+                return False
+
+            if feats["total_beer_volume"] < 1.2:
+                return True
             # if beers are consumed with at least a 20 minutes
-            if df["first_to_second_order"] >= 20 or df['sit_to_order'] >= 20:
+            if df["first_to_second_order"].iloc[0] >= 20 or df['avg_time_between_steps'] >= 30:
                 return True
 
         if feats["total_foods"] != 0:
-            if feats["total_foods"]/feats["total_drinks"] > 2:
+            if feats["total_drinks"]/feats["total_drinks"] > 2:
+                return False
+            elif feats["total_drinks"]/feats['total_foods'] > 1.5:
                 return False
             return True
 
         return False
 
-    def process_table(self, df):
+    def _process_table(self, df):
 
         #data["period_of_day"] = data["order_time"].apply(lambda x: period_of_day(x))
-        self.fix_times(df)
-        df["period_of_day"] = [self.period_of_day(df.order_time.iloc[0])]*len(df)
+        self._fix_times(df)
+        df["period_of_day"] = df.order_time.apply(lambda x: self._period_of_day(x))
+        '''
         order_feats = self.total_meal_steps(df)
         df['total_meal_steps'] = [order_feats['total_meal_steps']]*len(df)
         df['first_to_second_order'] = [order_feats['first_to_second_order']]*len(df)
         df['avg_time_between_steps'] = [order_feats['avg_time_between_steps']] * len(df)
+        '''
 
-    def get_features(self, df):
+    def _get_features(self, df):
         features = {}
 
         features['total_beers'] = df['total_orders_category_id_1.0'].iloc[0]
-        features['total_beer_volume'] = sum(list(df["beer_volume"]))
+        features['total_beer_volume'] = df["beer_volume"].iloc[0]
         features['total_liquers'] = df['total_orders_category_id_3.0'].iloc[0] + df['total_orders_category_id_6.0'].iloc[0]
         features['soft_drinks'] = df['total_orders_category_id_4.0'].iloc[0]
         features['total_drinks'] = features['total_beers'] + features['total_liquers']
         features['total_foods'] = df['total_orders_category_id_2.0'].iloc[0]
 
+        '''
         large_meals = 0
         small_meals = 0
         df_meals = df[df.category_id == 2]
@@ -157,35 +187,32 @@ class Bin1Classifier():
             else: small_meals += 1
         features["total_large_meals"] = large_meals
         features["total_small_meals"] = small_meals
-
+        '''
         return features
 
-    def filter(self, df):
+    def _filter(self, df):
 
-        for i in range(1,df.total_meal_steps.iloc[0] + 1):
-            step = df[df.meal_step == i]
-            if len(step) > 3:
-                return False
+        if df['max_items_per_step'].iloc[0] > 3:
+            return False
 
-        for meal in list(df.title):
-            if "kid" in meal.lower():
-                return False
+        if df["kids_meal"].iloc[0] == 1:
+            return False
 
         return True
 
-    def fix_times(self, df):
+    def _fix_times(self, df):
         df['order_time'] = pd.to_datetime(df['order_time'], format="%Y-%m-%d %H:%M:%S.%f")
         df['order_time_closed'] = pd.to_datetime(df['order_time_closed'], format="%Y-%m-%d %H:%M:%S.%f")
         df['order_item_time'] = pd.to_datetime(df['order_item_time'], format="%Y-%m-%d %H:%M:%S.%f")
 
-    def period_of_day(self, order_time):
+    def _period_of_day(self, order_time):
         hour = order_time.hour
         min = order_time.minute
 
         time_labels = set()
         if (hour >= 6 and hour < 11):
             time_labels.add('breakfast')
-        elif (hour == 10 and min >=50) or (hour >= 11 and hour <= 2):
+        elif (hour == 10 and min >=50) or (hour >= 11 and hour <= 14):
             time_labels.add('lunch')
         elif (hour >= 14 and hour < 18):
             time_labels.add('afternoon')
@@ -229,26 +256,25 @@ class Bin1Classifier():
 
 if __name__ == "__main__":
     print("Testing 8 dev labeled order ids")
-    picked_hockey_tables = {
-        512690383: CASUAL_DRINK_MEAL,
-        521702519: DRINKING,
-        521093892: DRINKING,
-        517505343: NOT_1,
-        521783372: DINNER,
-        521769692: CASUAL_DRINK_MEAL,
-        512852707: CASUAL_DRINK_MEAL,
-        525538989: CASUAL_DRINK_MEAL
+    picked_val_tables = {
+        434780854: DRINKING,
+        434753224: DINNER,
+        447023765: LUNCH,
+        434766693: CASUAL_DRINK_MEAL,
+        446799837: DINNER
     }
-    df = pd.read_csv("../data/hockey_3_text_processed.csv")
+    df = pd.read_csv("../data/valentine_3_text_processed.csv")
+
     df = df[df.guest_count == 1].sort_values(by=['order_item_time'])
     df = df[~(df.total_sales_before_tax == 0.)]
 
     cls = Bin1Classifier()
     results = []
-    for k,v in picked_hockey_tables.items():
+    for k,v in picked_val_tables.items():
         order = df[df.order_id == k]
-        cls.classify(order)
-        results.append((k,v,cls.occasion_labels, cls.time_labels))
+        order = oc.shrink_orders_to_table(order)
+        occasion_labels, time_labels = cls.classify(order)
+        results.append((k,v,occasion_labels, time_labels))
 
     df = pd.DataFrame(results, columns=["order_id", "True_label", "Predicted occasion", "time sub-label"])
     df.to_csv("cat_1_dev_results.csv", index=False)

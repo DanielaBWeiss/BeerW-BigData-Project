@@ -7,14 +7,14 @@ from bin_3to5 import Bin3to5Classifier
 from bin_6plus import Bin6PlusClassifier
 
 
-DATA_PATH = "" # fix data path
+DATA_PATH = "../data/hockey_3_text_processing.csv" # fix data path
 
 UNK = "UNK"
 
 
 def add_features(data):
     pass
-
+    #Not sure that this is needed.
 
 def drop_features(data):
     columns = ["bar_id", "order_item_id", "sales_before_tax", "sales_inc_tax", "title",
@@ -33,6 +33,13 @@ def shrink_orders_to_table(data):
         "order_time": "min",
         "order_time_closed": "min",
         "order_item_time": "min",
+        "dwell_time": "min",
+        "total_meal_steps":"min",
+        "avg_time_between_steps":"min",
+        "sit_to_order":"min",
+        "max_items_per_step":"min",
+        "total_large_meals":"min",
+        "total_small_meals":"min",
         "item_qty": "sum",
         "guest_count": "min",
         "beer_volume": "sum",
