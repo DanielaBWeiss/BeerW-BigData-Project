@@ -1,9 +1,9 @@
 import pandas as pd
 
 data_map = {
-    "hockey": "../data/korea_toronto_hocky_20190410_20190424.csv",
-    "valentine": "../data/toronto_valentine_20190210_20190216.csv",
-    "silvester": "../data/toronto_silvester_20181223_20190105.csv"
+    "hockey"    : "../data/korea_toronto_hocky_20190410_20190424.csv",
+    "valentine" : "../data/toronto_valentine_20190210_20190216.csv",
+    "silvester" : "../data/toronto_silvester_20181223_20190105.csv"
 }
 
 #Change name here to add to saved csv file
@@ -67,4 +67,5 @@ data["title"] = data["title"].apply(lambda x: ''.join(filter(whitelist.__contain
 data.title = data.title.apply(lambda x: str(x))
 data = data[data.apply(lambda x: filter_titles(x), axis=1)]
 
-data.to_csv("../data/"+name+"_1_text_processed.csv", index=False)
+
+data.to_csv("../data/{}_1_text_processed.csv".format(name), index=False)
