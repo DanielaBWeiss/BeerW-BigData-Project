@@ -25,20 +25,20 @@ one_hot_encoded = ["category_id_" + str(category_id) for category_id in category
 data.drop(one_hot_encoded, axis=1, inplace=True)
 
 
-
 # 2. Add `total_orders` feature (excluding category 5)
-total_categories_ids = ["total_orders_category_id_" + str(float(i)) for i in range(1, 7)]
+total_categories_ids        = ["total_orders_category_id_" + str(float(i)) for i in range(1, 7)]
 total_categories_ids_to_sum = [column for column in total_categories_ids if column != "total_orders_category_id_5.0"]
-data["total_orders"] = data.apply(lambda order: sum(order[column] for column in total_categories_ids_to_sum), axis=1)
+data["total_orders"]        = data.apply(lambda order: sum(order[column] for column in total_categories_ids_to_sum), axis=1)
 
 
 # Add order item and table "hour" and "minute" features
-data["order_item_time"] = pd.to_datetime(data["order_item_time"], format="%Y-%m-%d %H:%M:%S.%f")
-data["order_time"] = pd.to_datetime(data["order_time"], format="%Y-%m-%d %H:%M:%S.%f")
+data["order_item_time"]   = pd.to_datetime(data["order_item_time"], format="%Y-%m-%d %H:%M:%S.%f")
+data["order_time"]        = pd.to_datetime(data["order_time"], format="%Y-%m-%d %H:%M:%S.%f")
 data["order_time_closed"] = pd.to_datetime(data["order_time_closed"], format="%Y-%m-%d %H:%M:%S.%f")
 
 #  Add `order_day_of_week` feature
 data["order_day_of_week"] = data.order_time.apply(lambda ticket: ticket.day_name())
+
 
 # 3. Add `is_weekend` feature
 weekend = ["Friday", "Saturday", "Sunday"]
@@ -48,7 +48,7 @@ data["is_weekend"] = data.order_day_of_week.apply(lambda ticket_day: ticket_day 
 # 4. Add sharable foods
 sharable_foods = [
     "pizza", "cake", "hot pot", "nachos", "guac", "wings", "Focaccia", "bread", "fries", "pretzels",
-"quesadilla", "nuts", "fondue", "calamari", "fingers sauced","chicken fingers", "chkn fingers", "quesa stack" 
+    "quesadilla", "nuts", "fondue", "calamari", "fingers sauced", "chicken fingers", "chkn fingers", "quesa stack" 
 ]
 
 def find_sharable(title):
@@ -61,10 +61,11 @@ def find_sharable(title):
 data["sharable"] = data.title.apply(lambda x: find_sharable(x))
 
 
-
 # 5. meal with kids
-kids_pattern = re.compile(r'.*kid|k\-|k\.')
+kids_pattern = re.compile(r'.*kid|k\-|k\.|k ')
 data["kids_meal"] = data.title.str.lower().str.match(kids_pattern, na=False).astype(int)
+
+
 # 6. birthday
 data["birthday"] = data.title.apply(lambda x: 1 if 'birthday' in x else 0)
 
@@ -75,20 +76,20 @@ data["birthday"] = data.title.apply(lambda x: 1 if 'birthday' in x else 0)
 data["order_hour"] = data.order_time.apply(lambda ticket: ticket.hour)
 
 def period_of_day(hour):
-    if hour >= 6 and hour < 11: return 'breakfast'
-    elif hour >= 11 and hour < 14: return 'lunch'
-    elif hour >= 14 and hour < 18: return 'afternoon'
-    elif hour >= 18 and hour < 21: return 'dinner'
-    elif hour >= 21 and hour < 23: return 'hang_out'
-    elif hour >= 23 or hour < 6: return 'night'
+    if hour >= 6 and hour < 11    : return 'breakfast'
+    elif hour >= 11 and hour < 14 : return 'lunch'
+    elif hour >= 14 and hour < 18 : return 'afternoon'
+    elif hour >= 18 and hour < 21 : return 'dinner'
+    elif hour >= 21 and hour < 23 : return 'hang_out'
+    elif hour >= 23 or hour < 6   : return 'night'
 
-data["period_of_day"] = data.apply(lambda order: period_of_day(int(order["order_hour"])), axis=1)
+data["period_of_day"]      = data.apply(lambda order: period_of_day(int(order["order_hour"])), axis=1)
 
-data["order_minute"] = data.order_time.apply(lambda ticket: ticket.minute)
-data["order_item_minute"] = data.order_item_time.apply(lambda ticket: ticket.minute)
-data["order_item_hour"] = data.order_item_time.apply(lambda ticket: ticket.hour)
+data["order_minute"]       = data.order_time.apply(lambda ticket: ticket.minute)
+data["order_item_minute"]  = data.order_item_time.apply(lambda ticket: ticket.minute)
+data["order_item_hour"]    = data.order_item_time.apply(lambda ticket: ticket.hour)
 data["order_close_minute"] = data.order_time_closed.apply(lambda ticket: ticket.minute)
-data["order_close_hour"] = data.order_time_closed.apply(lambda ticket: ticket.hour)
+data["order_close_hour"]   = data.order_time_closed.apply(lambda ticket: ticket.hour)
 
 
 import math
@@ -96,6 +97,7 @@ import math
 def find_total_time(data):
     order_ids = list(data.order_id.value_counts().keys())
     total_dict = {}
+    
     for order in order_ids:
         total_dict[order] = {}
         df_order = data[data.order_id == order]
@@ -167,11 +169,11 @@ total_dict = find_total_time(data)
 
 
 # 8. Adding the Meal flow steps
-data["dwell_time"] = data.order_id.apply(lambda x: total_dict[x]["total_time"])
-data["meal_step"] = data.apply(lambda x: total_dict[x.order_id]["meal_step"][x.order_item_time], axis=1)
+data["dwell_time"]              = data.order_id.apply(lambda x: total_dict[x]["total_time"])
+data["meal_step"]               = data.apply(lambda x: total_dict[x.order_id]["meal_step"][x.order_item_time], axis=1)
 data["meal_flow_last_to_close"] = data.apply(lambda x: total_dict[x.order_id]["meal_flow_last_to_close"], axis=1)
-data["total_flow_steps"] = data.order_id.apply(lambda x: total_dict[x]["total_meal_flow_steps"])
-data["meal_flow_step"] = data.apply(lambda x: total_dict[x.order_id]["meal_flow"][x.order_item_time], axis=1)
+data["total_flow_steps"]        = data.order_id.apply(lambda x: total_dict[x]["total_meal_flow_steps"])
+data["meal_flow_step"]          = data.apply(lambda x: total_dict[x.order_id]["meal_flow"][x.order_item_time], axis=1)
 
 
-data.to_csv("../data/"+name+"_2_text_processed.csv", index=False)
+data.to_csv("../data/{}_2_text_processed.csv".format(name), index=False)
