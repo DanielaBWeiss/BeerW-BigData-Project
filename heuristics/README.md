@@ -34,10 +34,9 @@ Each occasion may also have a time sub-label one or more of the following:
 1. `Family Event`
 2. `Drinking`
 3. `Breakfast`
-4. `Brunch`
-5. `Lunch`
-6. `Dinner`
-7. `Social Gathering`
-8. `After Work`
+4. `Lunch`
+5. `Dinner`
+6. `Social Gathering`
+7. `After Work`
 
 ### 6+ guests tables

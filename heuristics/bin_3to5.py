@@ -1,19 +1,11 @@
 FAMILY_EVENT = "FAMILY-EVENT"
 DRINKING = "DRINKING"
 BREAKFAST = "BREAKFAST"
-BRUNCH = "BRUNCH" # currently not in use (until mapping to times of day is done properly)
 LUNCH = "LUNCH"
 DINNER = "DINNER"
 SOCIAL_GATHERING = "SOCIAL-GATHERING"
 AFTER_WORK = "AFTER-WORK"
 UNK = "UNKNOWN"
-
-
-'''
-Improvements suggestions:
-1. Use a better kids_meal feature
-2. Use a main_dish feature (& total_main_dishes)
-'''
 
 
 class Bin3to5Classifier:
@@ -25,7 +17,7 @@ class Bin3to5Classifier:
             return BREAKFAST
         elif hour >= 11 and hour <= 14:
             return LUNCH
-        elif hour >= 16 and hour < 22:
+        elif hour >= 16 and hour <= 22:
             return DINNER
         
         return UNK
@@ -33,7 +25,6 @@ class Bin3to5Classifier:
     def _is_after_work(self, day, hour):
         if day in ["Saturday", "Sunday"]:
             return False
-        
         if hour >= 15 and hour < 19:
             return True
         return False
@@ -61,7 +52,6 @@ class Bin3to5Classifier:
         
         # else if table contains mostly main dishes, return according to time of day:
         # - BREAKFAST
-        # - BRUNCH
         # - LUNCH
         # - DINNER
         # TODO: use the pre-defined ToD table / generate a new one
