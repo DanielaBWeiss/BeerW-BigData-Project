@@ -4,7 +4,6 @@ OK*
 
 .csv
 
-
 .DS_STORE
 
-
+**/__pycache__
