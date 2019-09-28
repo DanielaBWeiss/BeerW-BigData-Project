@@ -1,3 +1,4 @@
+import re
 import pandas as pd
 
 data_map = {
@@ -61,9 +62,9 @@ data["sharable"] = data.title.apply(lambda x: find_sharable(x))
 
 
 
-
 # 5. meal with kids
-data["kids_meal"] = data.title.apply(lambda x: 1 if 'kid' in x else 0)
+kids_pattern = re.compile(r'.*kid|k\-|k\.')
+data["kids_meal"] = data.title.str.lower().str.match(kids_pattern, na=False).astype(int)
 # 6. birthday
 data["birthday"] = data.title.apply(lambda x: 1 if 'birthday' in x else 0)
 
