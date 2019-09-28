@@ -53,10 +53,7 @@ class Bin6PlusClassifier:
                 return DRINKING_PARTY
             return DRINKING
         
-        if table["total_orders_category_id_2.0"].iloc[0] > 0.5 * self.sum_of_all_drinks(table):
-            if table["guest_count"].iloc[0] > 10:
-                return DINNER_PARTY
-            return DINNER
+
         
         # TODO: figure out WHAT ARE main dishes? (again, create a list / take the whole category_id 2)
 
@@ -74,6 +71,9 @@ class Bin6PlusClassifier:
         # - LUNCH
         # - DINNER
         # TODO: use the pre-defined ToD table / generate a new one
+        if table["total_orders_category_id_2.0"].iloc[0] > 0.5 * self.sum_of_all_drinks(table):
+            return self._ToD(table["order_hour"].iloc[0])
+        
         if table["total_orders_category_id_2.0"].iloc[0] >= (table["guest_count"].iloc[0] / 2):
             return self._ToD(table["order_hour"].iloc[0])
         
