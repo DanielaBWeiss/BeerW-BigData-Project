@@ -12,11 +12,11 @@ data = pd.read_csv(data_map[name])
 
 data[~(data.guest_count == 0)]
 
-
 data['total_sales_before_tax'] = data.groupby('order_id')['sales_before_tax'].transform('sum')
 data['total_sales_inc_tax']    = data.groupby('order_id')['sales_inc_tax'].transform('sum')
 data['total_orders']           = data.groupby('order_id')['order_id'].transform('size')
 
+data = data[~(data.total_sales_before_tax == 0)]
 #columns = ['bar_id', 'order_id', 'order_time', 'order_item_id', 'title', 'category_id',
  #          'beer_volume', 'item_qty', 'guest_count', 'sales_before_tax', 'total_sales_before_tax', 'total_orders']
 #data = data[columns]
