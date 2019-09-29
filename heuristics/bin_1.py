@@ -1,5 +1,5 @@
 import pandas as pd
-#import occasion_classifier as oc
+import occasion_classifier as oc
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -257,13 +257,16 @@ class Bin1Classifier():
 if __name__ == "__main__":
     print("Testing 8 dev labeled order ids")
     picked_val_tables = {
-        434780854: DRINKING,
-        434753224: DINNER,
-        447023765: LUNCH,
-        434766693: CASUAL_DRINK_MEAL,
-        446799837: DINNER
+        512690383: CASUAL_DRINK_MEAL,
+        521702519: DRINKING,
+        521093892: DRINKING,
+        #524421347: NOT_1,
+        521783372: DINNER,
+        521769692: CASUAL_DRINK_MEAL,
+        512852707: CASUAL_DRINK_MEAL,
+        525538989: CASUAL_DRINK_MEAL
     }
-    df = pd.read_csv("../data/valentine_3_text_processed.csv")
+    df = pd.read_csv("../data/hockey_3_text_processed.csv")
 
     df = df[df.guest_count == 1].sort_values(by=['order_item_time'])
     df = df[~(df.total_sales_before_tax == 0.)]

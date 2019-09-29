@@ -7,22 +7,30 @@ data_map = {
     "silvester" : "../data/silvester_1_text_processed.csv"
 }
 
-name = "silvester"
+name = "hockey"
 # 1. Add `total_orders_category_id_X` feature (X = 1.0 ... 6.0)
 data = pd.read_csv(data_map[name])
 
 # add one-hot-encoding for category ids
 data.title = data.title.apply(lambda x: str(x))
 data = pd.concat([data, pd.get_dummies(data["category_id"], prefix="category_id")], axis=1)
+
+# add count for no. of orders for that item (based on item_qty)
 # count total of orders per category id
 category_ids = [float(i) for i in range(1, 7)]
 for category_id in category_ids:
+    data["count_category_id_" + str(category_id)] =\
+        data["category_id_" + str(category_id)] * data["item_qty"]
+    
     data["total_orders_category_id_" + str(category_id)] =\
-        data.groupby("order_id")["category_id_" + str(category_id)].transform("sum")
+        data.groupby("order_id")["count_category_id_" + str(category_id)].transform("sum")
 
 # drop the one-hot-encoding
 one_hot_encoded = ["category_id_" + str(category_id) for category_id in category_ids]
 data.drop(one_hot_encoded, axis=1, inplace=True)
+# drop the count
+count_categories = ["count_category_id_" + str(category_id) for category_id in category_ids]
+data.drop(count_categories, axis=1, inplace=True)
 
 
 # 2. Add `total_orders` feature (excluding category 5)
