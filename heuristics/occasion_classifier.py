@@ -40,6 +40,8 @@ def shrink_orders_to_table(data):
         "max_items_per_step":"min",
         "total_large_meals":"min",
         "total_small_meals":"min",
+        "total_large_sharable_meals":"min",
+        "total_small_sharable_meals":"min",
         "item_qty": "sum",
         "guest_count": "min",
         "beer_volume": "sum",

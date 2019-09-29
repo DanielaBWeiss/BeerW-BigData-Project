@@ -30,31 +30,18 @@ class Bin3to5Classifier:
         return False
     
     def classify(self, table):
-        # if table contains "K" as for kids - return FAMILY_EVENT
         if table["kids_meal"].iloc[0]:
             return FAMILY_EVENT
 
-        # else if table contains kids-related items (pancakes, milkshake etc.) - return FAMILY_EVENT
-        # TODO: create a list of kids-related items
-
-        # else if table contains mostly alcoholic drinks w/o main dishes - return DRINKING
         if table["total_orders_category_id_3.0"].iloc[0] > 0 and table["total_orders_category_id_2.0"].iloc[0] == 0:
             return DRINKING
-        # TODO: figure out WHAT ARE main dishes? (again, create a list / take the whole category_id 2)
-
-        # else if table contains shareable dishes w/ drinks, return:
-        # - AFTER_WORK if occurs around after-work hours (15-18) during the weekdays (Monday to Friday)
-        # - SOCIAL_GATHERING anytime else
-        if table["sharable"].iloc[0] and table["total_large_meals"].iloc[0] < table["guest_count"].iloc[0]:
+        
+        if table["sharable"].iloc[0] and \
+                (table["total_large_meals"].iloc[0] - table["total_large_sharable_meals"].iloc[0]) < (table["guest_count"].iloc[0] - 1):
             if self._is_after_work(table["order_day_of_week"].iloc[0], table["order_hour"].iloc[0]):
                 return AFTER_WORK
             return SOCIAL_GATHERING
         
-        # else if table contains mostly main dishes, return according to time of day:
-        # - BREAKFAST
-        # - LUNCH
-        # - DINNER
-        # TODO: use the pre-defined ToD table / generate a new one
         if table["total_orders_category_id_2.0"].iloc[0] >= (table["guest_count"].iloc[0] / 2):
             return self._ToD(table["order_hour"].iloc[0])
         
