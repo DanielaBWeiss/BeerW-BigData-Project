@@ -20,7 +20,7 @@ data = pd.concat([data, pd.get_dummies(data["category_id"], prefix="category_id"
 category_ids = [float(i) for i in range(1, 7)]
 for category_id in category_ids:
     data["count_category_id_" + str(category_id)] =\
-        data["category_id_" + str(category_id)] * data["item_qty"]
+        data["category_id_" + str(category_id)] * data["item_qty"] * (data["sales_before_tax"] > 0)
     
     data["total_orders_category_id_" + str(category_id)] =\
         data.groupby("order_id")["count_category_id_" + str(category_id)].transform("sum")
@@ -224,7 +224,7 @@ def total_meal_steps(df):
                 large_meals += row.item_qty
                 if row.sharable:
                     large_sharable_meals += row.item_qty
-            else:
+            elif row.sales_before_tax > 0:
                 small_meals += row.item_qty
                 if row.sharable:
                     small_sharable_meals += row.item_qty
@@ -240,23 +240,23 @@ def total_meal_steps(df):
 
 # 8. Adding the Meal flow steps
 total_dict = find_total_time(data)
-data["dwell_time"] = data.order_id.apply(lambda x: total_dict[x]["total_time"])
-data["meal_step"] = data.apply(lambda x: total_dict[x.order_id]["meal_step"][x.order_item_time], axis=1)
+data["dwell_time"]              = data.order_id.apply(lambda x: total_dict[x]["total_time"])
+data["meal_step"]               = data.apply(lambda x: total_dict[x.order_id]["meal_step"][x.order_item_time], axis=1)
 data["meal_flow_last_to_close"] = data.apply(lambda x: total_dict[x.order_id]["meal_flow_last_to_close"], axis=1)
 data["total_flow_steps"]        = data.order_id.apply(lambda x: total_dict[x]["total_meal_flow_steps"])
 data["meal_flow_step"]          = data.apply(lambda x: total_dict[x.order_id]["meal_flow"][x.order_item_time], axis=1)
 
 #Calculating the total, avg time between meals, time from sit down to ordering, and max items per single step
 avg_meal_step_dict = total_meal_steps(data)
-data['total_meal_steps'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_meal_steps'])
-data['first_to_second_order'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['first_to_second_order'])
+data['total_meal_steps']       = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_meal_steps'])
+data['first_to_second_order']  = data.order_id.apply(lambda x: avg_meal_step_dict[x]['first_to_second_order'])
 data['avg_time_between_steps'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['avg_time_between_steps'])
-data['sit_to_order'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['sit_to_order'])
-data['max_items_per_step'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['max_items_per_step'])
+data['sit_to_order']           = data.order_id.apply(lambda x: avg_meal_step_dict[x]['sit_to_order'])
+data['max_items_per_step']     = data.order_id.apply(lambda x: avg_meal_step_dict[x]['max_items_per_step'])
 
 #How many small and large meals per table
-data['total_large_meals'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_large_meals'])
-data['total_small_meals'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_small_meals'])
+data['total_large_meals']          = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_large_meals'])
+data['total_small_meals']          = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_small_meals'])
 data['total_large_sharable_meals'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_large_sharable_meals'])
 data['total_small_sharable_meals'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_small_sharable_meals'])
 

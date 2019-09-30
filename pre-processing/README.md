@@ -24,8 +24,8 @@ This script reads the previously cleaned data, and adds multiple features using 
 In this step you should have *48* features.
 
 &nbsp;**What features are we adding? (total of 31 new features)** <br />
-  - `total_orders_category_id_X` - We sum all the category ids in each item of the total order, and add 6 separate columns for each one (X = 1.0 ... 6.0) \[6]
-  - `total_orders` - total number of items in an order \[1]
+  - `total_orders_category_id_X` - we sum all the category ids in each item of the total order, and add 6 separate columns for each one, items of 0 cost are not counted (X = 1.0 ... 6.0) \[6]
+  - `total_orders` - total number of items in an order, items of category 5 and items of 0 cost are not counted \[1]
   - `order_day_of_week` - "Friday", "Monday", etc \[1]
   - `is_weekend` - is the order day landed on a weekend (friday - sunday) \[1]
   - `sharable` - is the item "title" a food that is a typical "sharing" food? (pizza, fries, wings, etc) \[1]
@@ -44,10 +44,10 @@ In this step you should have *48* features.
   - `avg_time_between_steps` - average time between item orders in that order \[1]
   - `sit_to_order` - the time passed until the first item order \[1]
   - `max_items_per_step` - the highest count of items ordered in a step \[1]
-  - `total_large_meals` - number of large meals in that order \[1]
-  - `total_small_meals` - number of small meals in that order \[1]
-  - `total_large_sharable_meals` - number of large sharable meals in that order \[1]
-  - `total_small_sharable_meals` - number of small sharable meals in that order \[1]
+  - `total_large_meals` - number of large meals in that order, items of 0 cost are not counted \[1]
+  - `total_small_meals` - number of small meals in that order, items of 0 cost are not counted \[1]
+  - `total_large_sharable_meals` - number of large sharable meals in that order, items of 0 cost are not counted \[1]
+  - `total_small_sharable_meals` - number of small sharable meals in that order, items of 0 cost are not counted \[1]
 <br />
 
 **3. Quality Filtering** <br />
