@@ -1,6 +1,7 @@
 order_id,True_label,Predicted occasion,time sub-label
-434780854,Drinking,Drinking,{'lunch'}
-434753224,Dinner,Dinner,{'dinner'}
-447023765,Lunch,Lunch,{'lunch'}
-434766693,Casual Drink and Meal,Casual Drink and Meal,{'late_night'}
-446799837,Dinner,Dinner,{'dinner'}
+363436344,DINNER,DINNER,"{'dinner', 'afternoon'}"
+361891515,DINNER,NOT_1,[]
+360026487,DINNER,DINNER,"{'dinner', 'afternoon'}"
+360384742,DINNER,DRINKING,"{'dinner', 'afternoon'}"
+360472971,DINNER,NOT_1,[]
+359433225,UNK,LUNCH,"{'afternoon', 'lunch'}"

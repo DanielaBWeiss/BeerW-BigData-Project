@@ -1,14 +1,16 @@
 import pandas as pd
-import occasion_classifier as oc
+#import occasion_classifier as oc
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
-LUNCH = "Lunch"
-DINNER = "Dinner"
-DRINKING = "Drinking"
-CASUAL_DRINK_MEAL = "Casual Drink and Meal"
-NOT_1 = "Not Category 1"
-UNK = "Unknown"
+LUNCH = "LUNCH"
+MUNCH = "MUNCH"
+DINNER = "DINNER"
+DRINKING = "DRINKING"
+CASUAL_DRINK = "CASUAL_DRINK"
+NOT_1 = "NOT_1"
+UNK = "UNK"
+
 
 
 '''
@@ -18,7 +20,7 @@ TODO
   casual drink
 - IMPORTANT
     - create an ordering for the labels, maybe doesn't make sense to do multi-label.
-
+- ADD munch
 
 
 '''
@@ -48,8 +50,9 @@ class Bin1Classifier():
 
         # handling case where only "lunch" time exists
         if self._is_lunch(df, feats): return LUNCH, time_labels
+        if self._is_munch(df, feats): return MUNCH, time_labels
         if self._is_dinner(df, feats): return DINNER, time_labels
-        if self._is_casual(df, feats): return CASUAL_DRINK_MEAL, time_labels
+        if self._is_casual(df, feats): return CASUAL_DRINK, time_labels
         if self._is_drinking(df, feats): return DRINKING, time_labels
         return UNK, []
 
@@ -71,6 +74,13 @@ class Bin1Classifier():
 
         return True
 
+    def _is_munch(self, df, feats):
+        if "late_night" not in df.period_of_day.iloc[0]:
+            return False
+
+        if feats["total_drinks"] == 0 and df["total_sales_before_tax"].iloc[0] <= 15:
+            return True
+
     def _is_dinner(self, df, feats):
         if "dinner" not in df.period_of_day.iloc[0] and "late_night" not in df.period_of_day.iloc[0]:
             return False
@@ -85,6 +95,9 @@ class Bin1Classifier():
             return False
 
         if feats["total_liquers"] == 2:
+            return False
+
+        if df["total_large_meals"].iloc[0] == 1 and df["sharable"].iloc[0] == 1 and feats["total_drinks"] > 0:
             return False
 
         return True
@@ -135,7 +148,7 @@ class Bin1Classifier():
             return False
 
         if feats["total_drinks"] == 3:
-            if feats["total_liquers"] <= 1 and feats["total_foods"] >= 1:
+            if feats["total_liquers"] <= 1 and feats["total_foods"] >= 1: #This means that we can have either 3 beers or 2 and 1 liquer, but one meal must be there
                 return True
 
             if feats["total_liquers"] >= 2:
@@ -212,13 +225,13 @@ class Bin1Classifier():
         time_labels = set()
         if (hour >= 6 and hour < 11):
             time_labels.add('breakfast')
-        elif (hour == 10 and min >=50) or (hour >= 11 and hour <= 14):
+        if (hour == 10 and min >=50) or (hour == 14 and min <= 10) or (hour >= 11 and hour <= 13):
             time_labels.add('lunch')
-        elif (hour >= 14 and hour < 18):
+        if (hour >= 14 and hour < 18):
             time_labels.add('afternoon')
-        elif (hour >= 18 and hour < 22) or (hour == 17 and min >= 30):
+        if (hour >= 18 and hour < 22) or (hour == 17 and min >= 30):
             time_labels.add('dinner')
-        elif hour >= 22 or hour <= 4 or (hour == 21 and min >= 45):
+        if hour >= 22 or hour <= 4 or (hour == 21 and min >= 45):
             time_labels.add('late_night')
 
         return time_labels
@@ -257,14 +270,8 @@ class Bin1Classifier():
 if __name__ == "__main__":
     print("Testing 8 dev labeled order ids")
     picked_val_tables = {
-        512690383: CASUAL_DRINK_MEAL,
-        521702519: DRINKING,
-        521093892: DRINKING,
-        #524421347: NOT_1,
-        521783372: DINNER,
-        521769692: CASUAL_DRINK_MEAL,
-        512852707: CASUAL_DRINK_MEAL,
-        525538989: CASUAL_DRINK_MEAL
+        512856854: DRINKING,
+        520171895: DINNER
     }
     df = pd.read_csv("../data/hockey_3_text_processed.csv")
 
