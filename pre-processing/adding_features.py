@@ -214,13 +214,25 @@ def total_meal_steps(df):
         total_dict[order]['avg_time_between_steps'] = avg_steps
         
         large_meals = 0
+        large_sharable_meals = 0
         small_meals = 0
+        small_sharable_meals = 0
+        
         df_meals = df_order[df_order.category_id == 2]
-        for meal_price in df_meals.sales_before_tax:
-            if meal_price >= 6: large_meals += 1
-            else: small_meals += 1
+        for index, row in df_meals.iterrows():
+            if row.sales_before_tax >= 6:
+                large_meals += row.item_qty
+                if row.sharable:
+                    large_sharable_meals += row.item_qty
+            else:
+                small_meals += row.item_qty
+                if row.sharable:
+                    small_sharable_meals += row.item_qty
+        
         total_dict[order]["total_large_meals"] = large_meals
         total_dict[order]["total_small_meals"] = small_meals
+        total_dict[order]["total_large_sharable_meals"] = large_sharable_meals
+        total_dict[order]["total_small_sharable_meals"] = small_sharable_meals
 
     return total_dict
 
@@ -245,6 +257,8 @@ data['max_items_per_step'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]
 #How many small and large meals per table
 data['total_large_meals'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_large_meals'])
 data['total_small_meals'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_small_meals'])
+data['total_large_sharable_meals'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_large_sharable_meals'])
+data['total_small_sharable_meals'] = data.order_id.apply(lambda x: avg_meal_step_dict[x]['total_small_sharable_meals'])
 
 
 
