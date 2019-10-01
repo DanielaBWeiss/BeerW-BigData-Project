@@ -97,7 +97,7 @@ class Bin1Classifier():
         if feats["total_liquers"] == 2:
             return False
 
-        if df["total_large_meals"].iloc[0] == 1 and df["sharable"].iloc[0] == 1 and feats["total_drinks"] > 0:
+        if (df["total_large_meals"].iloc[0] <= 1 and df["total_large_meals"].iloc[0] > 0) and df["sharable"].iloc[0] == 1 and feats["total_drinks"] > 0:
             return False
 
         return True
@@ -143,12 +143,12 @@ class Bin1Classifier():
         if feats['total_drinks'] == 2: #at this point we have at least one large meal, and at most two drink
             if feats["total_beers"] >= 1:
                 return True
-            elif feats["total_foods"] >= 1: #if theres two liquer, at least one meal must exist
+            elif feats["total_foods"] > 0: #if theres two liquer, at least one meal must exist
                 return True
             return False
 
         if feats["total_drinks"] == 3:
-            if feats["total_liquers"] <= 1 and feats["total_foods"] >= 1: #This means that we can have either 3 beers or 2 and 1 liquer, but one meal must be there
+            if feats["total_liquers"] <= 1 and feats["total_foods"] > 0: #This means that we can have either 3 beers or 2 and 1 liquer, but one meal must be there
                 return True
 
             if feats["total_liquers"] >= 2:
@@ -237,41 +237,11 @@ class Bin1Classifier():
         return time_labels
 
 
-    def total_meal_steps(self, df):
-        order = {}
-
-        df = df.sort_values(by="order_item_time")
-        last_meal_step = list(df.meal_step.sort_values())[-1]
-        order['total_meal_steps'] = last_meal_step
-
-        # from sit down to first order
-        meal_flows = [(i * 4 + 1) for i in list(df.meal_flow_step)]
-
-        order['sit_to_order'] = meal_flows[0]
-        if len(meal_flows) > 1:
-            order['first_to_second_order'] = meal_flows[1] - meal_flows[0]
-
-        total_diff_flows = []
-        prev_flow = 0
-        for flow in meal_flows:
-            if flow == prev_flow:
-                continue
-            total_diff_flows.append(flow - prev_flow)
-            prev_flow = flow
-
-        # avg time between orders
-        avg_steps = sum(total_diff_flows)/len(total_diff_flows)
-        order['avg_time_between_steps'] = avg_steps
-
-        return order
-
 
 
 if __name__ == "__main__":
-    print("Testing 8 dev labeled order ids")
     picked_val_tables = {
-        512856854: DRINKING,
-        520171895: DINNER
+        514471619: LUNCH
     }
     df = pd.read_csv("../data/hockey_3_text_processed.csv")
 
