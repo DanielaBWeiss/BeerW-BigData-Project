@@ -3,8 +3,6 @@
 The data needs to go through multiple steps in order to clean it, filter it for quality, and add features to it.  
 We start with data of *15* features.
 
-In the *pre-processing/* folder there exist multiple scripts for you to run.
-
 **1. Textual Cleaning** <br />
 Run `python textual_cleaning.py` and make sure to change the name of the csv file to the one you have in the data folder. <br />
 This script saves the file: `df_1_text_processed.csv` under the `data` folder.  

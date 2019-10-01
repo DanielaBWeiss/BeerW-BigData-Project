@@ -39,5 +39,6 @@ Each occasion may also have a time sub-label one or more of the following:
 5. `Dinner`
 6. `Social Gathering`
 7. `After Work`
+8. `Unknown*
 
 ### 6+ guests tables
