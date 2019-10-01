@@ -94,10 +94,10 @@ class Bin1Classifier():
         if feats["total_drinks"] > 2:
             return False
 
-        if feats["total_liquers"] == 2:
-            return False
+        #if feats["total_liquers"] == 2:
+        #    return False
 
-        if (df["total_large_meals"].iloc[0] <= 1 and df["total_large_meals"].iloc[0] > 0) and df["sharable"].iloc[0] == 1 and feats["total_drinks"] > 0:
+        if (feats["total_foods"] <= 1 and feats["total_foods"] > 0) and df["sharable"].iloc[0] == 1 and feats["total_drinks"] > 0:
             return False
 
         return True
@@ -239,9 +239,9 @@ class Bin1Classifier():
 
 if __name__ == "__main__":
     picked_val_tables = {
-        514471619: LUNCH
+        447067242: DINNER
     }
-    df = pd.read_csv("../data/hockey_3_text_processed.csv")
+    df = pd.read_csv("../data/valentine_3_text_processed.csv")
 
     df = df[df.guest_count == 1].sort_values(by=['order_item_time'])
     df = df[~(df.total_sales_before_tax == 0.)]
