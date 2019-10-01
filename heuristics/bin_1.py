@@ -37,7 +37,7 @@ class Bin1Classifier():
         feats = self._get_features(df)
 
         if not self._filter(df):  # Filter out tables that should not have been labeled with guest count == 1
-            return NOT_1, []
+            return NOT_1
 
 
         # ----HEURISTICS FOR CLASSIFYING OCCASIONS------
@@ -49,12 +49,12 @@ class Bin1Classifier():
         time_labels = df["period_of_day"].iloc[0]
 
         # handling case where only "lunch" time exists
-        if self._is_lunch(df, feats): return LUNCH, time_labels
-        if self._is_munch(df, feats): return MUNCH, time_labels
-        if self._is_dinner(df, feats): return DINNER, time_labels
-        if self._is_casual(df, feats): return CASUAL_DRINK, time_labels
-        if self._is_drinking(df, feats): return DRINKING, time_labels
-        return UNK, []
+        if self._is_lunch(df, feats): return LUNCH#, time_labels
+        if self._is_munch(df, feats): return MUNCH#, time_labels
+        if self._is_dinner(df, feats): return DINNER#, time_labels
+        if self._is_casual(df, feats): return CASUAL_DRINK#, time_labels
+        if self._is_drinking(df, feats): return DRINKING#, time_labels
+        return UNK#, []
 
     def _is_lunch(self, df, feats):
         if "lunch" not in df.period_of_day.iloc[0]:
@@ -157,13 +157,11 @@ class Bin1Classifier():
             if feats["total_beer_volume"] < 1.2:
                 return True
             # if beers are consumed with at least a 20 minutes
-            if df["first_to_second_order"].iloc[0] >= 20 or df['avg_time_between_steps'] >= 30:
+            if df['avg_time_between_steps'].iloc[0] >= 30:
                 return True
 
         if feats["total_foods"] != 0:
-            if feats["total_drinks"]/feats["total_drinks"] > 2:
-                return False
-            elif feats["total_drinks"]/feats['total_foods'] > 1.5:
+            if feats["total_drinks"]/feats['total_foods'] > 1.5:
                 return False
             return True
 

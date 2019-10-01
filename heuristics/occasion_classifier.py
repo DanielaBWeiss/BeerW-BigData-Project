@@ -79,14 +79,14 @@ def classify(order):
     bin3to5_classifier = Bin3to5Classifier()
     bin6plus_classifier = Bin6PlusClassifier()
     
-    if order.guest_count == 1:
-        return bin1_classifier(order)
-    elif order.guest_count == 2:
-        return bin2_classifier(order)
-    elif order.guest_count >= 3 and order.guest_count <= 5:
-        return bin3to5_classifier(order)
-    elif order.guest_count >= 6:
-        return bin6plus_classifier(order)
+    if order.guest_count.iloc[0] == 1:
+        return bin1_classifier.classify(order)
+    elif order.guest_count.iloc[0] == 2:
+        return bin2_classifier.classify(order)
+    elif order.guest_count.iloc[0] >= 3 and order.guest_count.iloc[0] <= 5:
+        return bin3to5_classifier.classify(order)
+    elif order.guest_count.iloc[0] >= 6:
+        return bin6plus_classifier.classify(order)
     else:
         return UNK
 
