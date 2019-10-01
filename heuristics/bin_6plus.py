@@ -3,9 +3,9 @@ DRINKING = "DRINKING"
 BREAKFAST = "BREAKFAST"
 LUNCH = "LUNCH"
 DINNER = "DINNER"
-SOCIAL_GATHERING = "SOCIAL-GATHERING"
-DRINKING_PARTY = "DRINKING-PARTY"
-AFTER_WORK = "AFTER-WORK"
+SOCIAL_GATHERING = "SOCIAL_GATHERING"
+DRINKING_PARTY = "DRINKING_PARTY"
+AFTER_WORK = "AFTER_WORK"
 UNK = "UNKNOWN"
 
 class Bin6PlusClassifier:
@@ -47,8 +47,8 @@ class Bin6PlusClassifier:
                 return DRINKING_PARTY
             return DRINKING
         
-        #else if number of drinks is two times the number of food then it is drinking
-        if table["total_orders_category_id_3.0"].iloc[0] + table["total_orders_category_id_1.0"].iloc[0] > 2 * table["total_orders_category_id_2.0"].iloc[0]:
+        #else if number of drinks is five times the number of food then it is drinking
+        if table["total_orders_category_id_3.0"].iloc[0] + table["total_orders_category_id_1.0"].iloc[0] > 5 * table["total_orders_category_id_2.0"].iloc[0]:
             if table["guest_count"].iloc[0] > 10:
                 return DRINKING_PARTY
             return DRINKING
@@ -60,10 +60,17 @@ class Bin6PlusClassifier:
         # else if table contains shareable dishes w/ drinks, return:
         # - AFTER_WORK if occurs around after-work hours (15-18) during the weekdays (Monday to Friday)
         # - SOCIAL_GATHERING anytime else
-        if table["sharable"].iloc[0] and table["total_orders_category_id_2.0"].iloc[0] < table["guest_count"].iloc[0]:
+        # if more than 2/3 of the guest order personal dish than it should be calssified as meal
+        if table["sharable"].iloc[0] and (table["total_large_meals"].iloc[0] - table["total_large_sharable_meals"].iloc[0]) < 2*(table["guest_count"].iloc[0])//3:
             if self._is_after_work(table["order_day_of_week"].iloc[0], table["order_hour"].iloc[0]):
                 return AFTER_WORK
             return SOCIAL_GATHERING
+        
+        if (table["total_orders_category_id_1.0"].iloc[0] > table["guest_count"].iloc[0]) and (table["total_large_meals"].iloc[0] < (table["guest_count"].iloc[0])/3):
+            if self._is_after_work(table["order_day_of_week"].iloc[0], table["order_hour"].iloc[0]):
+                return AFTER_WORK
+            return SOCIAL_GATHERING
+        
         
         # else if table contains mostly main dishes, return according to time of day:
         # - BREAKFAST
@@ -72,9 +79,15 @@ class Bin6PlusClassifier:
         # - DINNER
         # TODO: use the pre-defined ToD table / generate a new one
         if table["total_orders_category_id_2.0"].iloc[0] > 0.5 * self.sum_of_all_drinks(table):
-            return self._ToD(table["order_hour"].iloc[0])
+            meal =  self._ToD(table["order_hour"].iloc[0])
+            if table["guest_count"].iloc[0] > 10 and meal != UNK:
+                return meal+"_PARTY"
+            return meal
         
         if table["total_orders_category_id_2.0"].iloc[0] >= (table["guest_count"].iloc[0] / 2):
-            return self._ToD(table["order_hour"].iloc[0])
+            meal = self._ToD(table["order_hour"].iloc[0])
+            if table["guest_count"].iloc[0] > 10 and meal != UNK:
+                return meal+"_PARTY"
+            return meal
         
         return UNK
