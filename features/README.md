@@ -1,4 +1,4 @@
 # Features
-
-Some of the features are given as indices.  
-This folder includes mappings from the index to the matching item title.
+ 
+This folder includes mappings from the index to the matching column id found in the table.
+These mappings were given to us by the company.
