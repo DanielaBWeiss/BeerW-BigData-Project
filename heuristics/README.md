@@ -42,3 +42,11 @@ Each occasion may also have a time sub-label one or more of the following:
 8. `Unknown*
 
 ### 6+ guests tables
+1. `Family Event`
+2. `Drinking`
+3. `Breakfast`
+4. `Lunch`
+5. `Dinner`
+6. `Social Gathering`
+7. `After Work`
+8. `Unknown*
