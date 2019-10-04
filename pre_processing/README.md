@@ -21,7 +21,7 @@ Run `python adding_features.py` - saves `df_2_text_processed.csv` under the `dat
 This script reads the previously cleaned data, and adds multiple features using dictionaries and rules.  
 In this step you should have *48* features.
 
-&nbsp;**What features are we adding? (total of 31 new features)** <br />
+&nbsp;**What features are we adding? (total of 33 new features)** <br />
   - `total_orders_category_id_X` - we sum all the category ids in each item of the total order, and add 6 separate columns for each one, items of 0 cost are not counted (X = 1.0 ... 6.0) \[6]
   - `total_orders` - total number of items in an order, items of category 5 and items of 0 cost are not counted \[1]
   - `order_day_of_week` - "Friday", "Monday", etc \[1]
@@ -46,6 +46,7 @@ In this step you should have *48* features.
   - `total_small_meals` - number of small meals in that order, items of 0 cost are not counted \[1]
   - `total_large_sharable_meals` - number of large sharable meals in that order, items of 0 cost are not counted \[1]
   - `total_small_sharable_meals` - number of small sharable meals in that order, items of 0 cost are not counted \[1]
+  - `total_sales_(before/inc)_tax` - total check for table \[2]
 <br />
 
 **3. Quality Filtering** <br />
@@ -54,5 +55,4 @@ This script reads the previous data, and removes bars that are "untrustworthy", 
 Currently, we are only removing specific bars where their maximum guest counts only reach 0 or 1.
 In this step you should have *50* features.
 
-&nbsp;**What features are we adding? (total of 2 new features)** <br />
-  - `total_sales_(before/inc)_tax` - total check for table \[2]
+&nbsp;&nbsp;**Note** - this script adds no new features <br />

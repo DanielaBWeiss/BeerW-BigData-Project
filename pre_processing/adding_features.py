@@ -32,6 +32,10 @@ data.drop(one_hot_encoded, axis=1, inplace=True)
 count_categories = ["count_category_id_" + str(category_id) for category_id in category_ids]
 data.drop(count_categories, axis=1, inplace=True)
 
+# count total sales for table
+data['total_sales_before_tax'] = data.groupby('order_id')['sales_before_tax'].transform('sum')
+data['total_sales_inc_tax']    = data.groupby('order_id')['sales_inc_tax'].transform('sum')
+
 
 # 2. Add `total_orders` feature (excluding category 5)
 total_categories_ids        = ["total_orders_category_id_" + str(float(i)) for i in range(1, 7)]
