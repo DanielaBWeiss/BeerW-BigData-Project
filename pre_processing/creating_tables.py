@@ -15,6 +15,8 @@ def shrink_orders_to_tables(data):
     # use `max` for booleans (we take the value of True whenever there exists at least 1 truthy order_item of the feature)
     
     data = data.groupby("order_id", as_index=False).agg({
+        "bar_id": "min",
+        
         "order_time": "min",
         "order_time_closed": "min",
         "order_hour": "min",
