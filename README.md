@@ -4,6 +4,8 @@ Data Science project in collaboration with an Analytics company.
 
 The goal of this project is to understand how to work with **Big Data**, do **data cleaning** and **processing**, and last but not least - **feature engineering** and **classification modeling**.
 
+Specifically the project revolved around the task of understanding the unique characteristics of alcohol orderings in bars and restaurants. 
+
 ## Using our Code
 
 ### Data
